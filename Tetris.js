@@ -17,7 +17,15 @@ class Coordinates {
 }
 
 let tetrominos = [];
-let tetrominoColor = ["teal", "yellow", "navy", "grey", "brown", "pink", "red"];
+let tetrominoColors = [
+  "teal",
+  "yellow",
+  "navy",
+  "grey",
+  "brown",
+  "pink",
+  "red"
+];
 let currentTetrominoColor;
 
 let gameBoardArray = [...Array(gameBoardArrayHeight)].map(e =>
@@ -110,7 +118,7 @@ function HandleKeyPress(key) {
 function DeleteTetromino() {
   for (let i = 0; i < currentTetromino.length; i++) {
     let x = currentTetromino[i][0] + startX;
-    let x = currentTetromino[i][1] + startY;
+    let y = currentTetromino[i][1] + startY;
 
     gameBoardArray[x][y] = 0;
     let coordinateX = coordinateArray[x][y].x;
@@ -119,4 +127,28 @@ function DeleteTetromino() {
     context.fillStyle = "white";
     context.fillRect(coordinateX, coordinateY, 21, 21);
   }
+}
+
+// store shapes
+function CreateTetrominos() {
+  //  T
+  tetrominos.push([[1, 0], [0, 1], [1, 1], [2, 1]]);
+  //  I
+  tetrominos.push([[0, 0], [1, 0], [2, 0], [3, 0]]);
+  //  J
+  tetrominos.push([[0, 0], [0, 1], [1, 1], [2, 1]]);
+  //  Square
+  tetrominos.push([[0, 0], [1, 0], [0, 1], [1, 1]]);
+  //  L
+  tetrominos.push([[2, 0], [0, 1], [1, 1], [2, 1]]);
+  //  S
+  tetrominos.push([[1, 0], [2, 0], [0, 1], [1, 1]]);
+  //  Z
+  tetrominos.push([[0, 0], [1, 0], [1, 1], [2, 1]]);
+}
+
+function CreateTetromino() {
+  let randomTetromino = Math.floor(Math.random() * tetrominos.length);
+  currentTetromino = tetrominos[randomTetromino];
+  currentTetrominoColor = tetrominoColors[randomTetromino];
 }
