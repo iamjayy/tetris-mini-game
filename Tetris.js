@@ -24,14 +24,15 @@ let gameBoardArray = [...Array(gameBoardArrayHeight)].map(e =>
   Array(gameBoardArrayWidth).fill(0)
 );
 
-let direction = {
-  idle: 0,
-  down: 1,
-  left: 2,
-  right: 3
+let DIRECTION = {
+  IDLE: 0,
+  DOWN: 1,
+  LEFT: 2,
+  RIGHT: 3
 };
 let direction;
 
+// $("DOMcontentLoaded").ready(SetupCanvas);
 document.addEventListener("DOMcontentLoaded", SetupCanvas);
 
 function CreateCoordinateArray() {
@@ -61,6 +62,10 @@ function SetupCanvas() {
   context.strokeStyle = "black";
   context.strokeRect(8, 8, 280, 462);
 
+  document.addEventListener("keydown", HandleKeyPress);
+  CreateTetrominos();
+  CreateTetromino();
+
   CreateCoordinateArray();
   DrawTetromino();
 }
@@ -69,5 +74,31 @@ function DrawTetromino() {
   for (let i = 0; i < currentTetromino.length; i++) {
     let x = currentTetromino[i][0] + startX;
     let y = currentTetromino[i][1] + startY;
+    gameBoardArray[x][y] = 1;
+    let coordinateX = coordinateArray[x][y].x;
+    let coordinateY = coordinateArray[x][y].y;
+
+    context.fillStyle = currentTetrominoColor;
+    context.fillRect(coordinateX, coordinateY, 21, 21);
+  }
+}
+
+// pass the key that was pressed
+function HandleKeyPress(key) {
+  if (key.keyCode === 65) {
+    direction = DIRECTION.LEFT;
+    DeleteTetromino();
+    startX--;
+    DrawTetromino();
+  } else if (key.keyCode === 68) {
+    direction = DIRECTION.RIGHT;
+    DeleteTetromino();
+    startX++;
+    DrawTetromino();
+  } else if (key.keyCode === 83) {
+    direction = DIRECTION.DOWN;
+    DeleteTetromino();
+    startY++;
+    DrawTetromino();
   }
 }
