@@ -85,20 +85,38 @@ function DrawTetromino() {
 
 // pass the key that was pressed
 function HandleKeyPress(key) {
+  // clicked on the A key to move to the left
   if (key.keyCode === 65) {
     direction = DIRECTION.LEFT;
     DeleteTetromino();
     startX--;
     DrawTetromino();
   } else if (key.keyCode === 68) {
+    // clicked on the D key to move to the right
     direction = DIRECTION.RIGHT;
     DeleteTetromino();
     startX++;
     DrawTetromino();
   } else if (key.keyCode === 83) {
+    // clicked on the S key to move to the down
     direction = DIRECTION.DOWN;
     DeleteTetromino();
     startY++;
     DrawTetromino();
+  }
+}
+
+// cycle through values to delete
+function DeleteTetromino() {
+  for (let i = 0; i < currentTetromino.length; i++) {
+    let x = currentTetromino[i][0] + startX;
+    let x = currentTetromino[i][1] + startY;
+
+    gameBoardArray[x][y] = 0;
+    let coordinateX = coordinateArray[x][y].x;
+    let coordinateY = coordinateArray[x][y].y;
+
+    context.fillStyle = "white";
+    context.fillRect(coordinateX, coordinateY, 21, 21);
   }
 }
