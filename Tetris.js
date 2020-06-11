@@ -4,6 +4,13 @@ let gameBoardArrayHeight = 20;
 let gameBoardArrayWidth = 12;
 let startX = 4;
 let startY = 0;
+
+let score = 0;
+let level = 1;
+let winOrLose = "Playing";
+
+let tetrisLogo;
+
 let coordinateArray = [...Array(gameBoardArrayHeight)].map(e =>
   Array(gameBoardArrayWidth).fill(0)
 );
@@ -32,6 +39,10 @@ let gameBoardArray = [...Array(gameBoardArrayHeight)].map(e =>
   Array(gameBoardArrayWidth).fill(0)
 );
 
+let stoppedShapeArray = [...Array(gameBoardArrayHeight)].map(e =>
+  Array(gameBoardArrayWidth).fill(0)
+);
+
 let DIRECTION = {
   IDLE: 0,
   DOWN: 1,
@@ -40,7 +51,7 @@ let DIRECTION = {
 };
 let direction;
 
-// $("DOMcontentLoaded").ready(SetupCanvas);
+// $("DOMContentLoaded").ready(SetupCanvas);
 document.addEventListener("DOMContentLoaded", SetupCanvas);
 
 function CreateCoordinateArray() {
@@ -70,12 +81,40 @@ function SetupCanvas() {
   context.strokeStyle = "black";
   context.strokeRect(8, 8, 280, 462);
 
+  tetrisLogo = new Image(161, 54);
+  tetrisLogo.onload = DrawTetrisLogo;
+  tetrisLogo.src = "assets/img/tetrislogo.png";
+
+  context.fillStyle = "black";
+  context.font = "21px Arial";
+  context.fillText("SCORE", 300, 98);
+
+  context.strokeRect(300, 107, 161, 24);
+  context.fillText(score.toString(), 310, 127);
+  context.fillText("LEVEL", 300, 157);
+  context.strokeRect(300, 171, 161, 24);
+  context.fillText(level.toString(), 310, 190);
+  context.fillText("WIN / LOSE", 300, 221);
+  context.fillText(winOrLose, 310, 261);
+  context.strokeRect(300, 232, 161, 95);
+  context.fillText("CONTROLS", 300, 354);
+  context.strokeRect(300, 366, 166, 104);
+  context.font = "19px Arial";
+  context.fillText("A : Move Left", 310, 388);
+  context.fillText("D : Move RIGHT", 310, 413);
+  context.fillText("S : Move DOWN", 310, 438);
+  context.fillText("E : Rotate Right", 310, 463);
+
   document.addEventListener("keydown", HandleKeyPress);
   CreateTetrominos();
   CreateTetromino();
 
   CreateCoordinateArray();
   DrawTetromino();
+}
+
+function DrawTetrisLogo() {
+  context.drawImage(tetrisLogo, 300, 8, 161, 54);
 }
 
 function DrawTetromino() {
