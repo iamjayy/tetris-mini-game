@@ -301,4 +301,38 @@ function CheckHorzCollision() {
       break;
     }
   }
+  return collision;
+}
+
+function CheckForCompletedRows() {
+  let rowsToDelete = 0;
+  startOfDelete = 0;
+  for (let y = 0; y < gameBoardArrayHeight; y++) {
+    let completed = true;
+    for (let x = 0; x < gameBoardArrayWidth; x++) {
+      let square = stoppedShapeArray[x][y];
+      if (square === 0 || typeof square === "undefined") {
+        completed = false;
+        break;
+      }
+    }
+    if (completed) {
+      if (startOfDelete === 0) startOfDelete = y;
+      rowsToDelete++;
+      for (let i = 0; i < gameBoardArray; i++) {
+        stoppedShapeArray[i][y] = 0;
+        gameBoardArray[i][y] = 0;
+        let coordinateX = coordinateArray[i][y].x;
+        let coordinateY = coordinateArray[i][y].y;
+        context.fillRect(coordinateX, coordinateY, 21, 21);
+      }
+    }
+  }
+  if (rowsToDelete > 0) {
+    score += 10;
+    context.fillStyle = "white";
+    context.fillRect(310, 109, 140, 19);
+    context.fillText(score.toString(), 310, 127);
+    MoveAllRowsDown(rowsToDelete, startOfDelete);
+  }
 }
