@@ -41,7 +41,7 @@ let DIRECTION = {
 let direction;
 
 // $("DOMcontentLoaded").ready(SetupCanvas);
-document.addEventListener("DOMcontentLoaded", SetupCanvas);
+document.addEventListener("DOMContentLoaded", SetupCanvas);
 
 function CreateCoordinateArray() {
   let i = 0,
@@ -57,7 +57,7 @@ function CreateCoordinateArray() {
 }
 
 function SetupCanvas() {
-  canvas = document.getElementById("#my-canvas");
+  canvas = document.getElementById("my-canvas");
   context = canvas.getContext("2d");
   canvas.width = 936;
   canvas.height = 956;
@@ -96,15 +96,19 @@ function HandleKeyPress(key) {
   // clicked on the A key to move to the left
   if (key.keyCode === 65) {
     direction = DIRECTION.LEFT;
-    DeleteTetromino();
-    startX--;
-    DrawTetromino();
+    if (!HittingTheWall()) {
+      DeleteTetromino();
+      startX--;
+      DrawTetromino();
+    }
   } else if (key.keyCode === 68) {
     // clicked on the D key to move to the right
     direction = DIRECTION.RIGHT;
-    DeleteTetromino();
-    startX++;
-    DrawTetromino();
+    if (!HittingTheWall()) {
+      DeleteTetromino();
+      startX++;
+      DrawTetromino();
+    }
   } else if (key.keyCode === 83) {
     // clicked on the S key to move to the down
     direction = DIRECTION.DOWN;
@@ -151,4 +155,16 @@ function CreateTetromino() {
   let randomTetromino = Math.floor(Math.random() * tetrominos.length);
   currentTetromino = tetrominos[randomTetromino];
   currentTetrominoColor = tetrominoColors[randomTetromino];
+}
+
+function HittingTheWall() {
+  for (let i = 0; i < currentTetromino.length; i++) {
+    let newX = currentTetromino[i][0] + startX;
+    if (newX <= 0 && direction === DIRECTION.LEFT) {
+      return true;
+    } else if (newX >= 11 && direction === DIRECTION.RIGHT) {
+      return true;
+    }
+  }
+  return false;
 }
