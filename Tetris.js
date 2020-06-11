@@ -149,7 +149,7 @@ function HandleKeyPress(key) {
       }
     } else if (key.keyCode === 83) {
       MoveTetrominoDown();
-    }
+    } else if (key.keyCode === 69) [Rotate()];
   }
 
   // clicked on the A key to move to the left
@@ -182,6 +182,12 @@ function MoveTetrominoDown() {
     DrawTetromino();
   }
 }
+
+window.setInterval(function() {
+  if (winOrLose != "Game Over") {
+    MoveTetrominoDown();
+  }
+}, 1000);
 
 // cycle through values to delete
 function DeleteTetromino() {
@@ -335,4 +341,64 @@ function CheckForCompletedRows() {
     context.fillText(score.toString(), 310, 127);
     MoveAllRowsDown(rowsToDelete, startOfDelete);
   }
+}
+
+function MoveAllRowsDown(rowsToDelete, startOfDelete) {
+  for (var i = startOfDelete - 1; i >= 0; i--) {
+    for (var x = 0; x < gameBoardArray; x++) {
+      var y2 = i + rowsToDelete;
+      var square = stoppedShapeArray[x][i];
+      var nextSquare = stoppedShapeArray[x][y2];
+      if (typeof square === "string") {
+        nextSquare = square;
+        gameBoardArray[x][y2] = 1;
+        stoppedShapeArray[x][y2] = square;
+        let coordinateX = coordinateArray[x][y2].x;
+        let coordinateY = coordinateArray[x][y2].y;
+        context.fillRect(coordinateX, coordinateY, 21, 21);
+
+        square = 0;
+        gameBoardArray[x][i] = 0;
+        stoppedShapeArray[x][i] = 0;
+        coordinateX = coordinateArray[x][i].x;
+        coordinateY = coordinateArray[x][i].y;
+        context.fillStyle = "white";
+        context.fillRect(coordinateX, coordinateY, 21, 21);
+      }
+    }
+  }
+}
+
+function Rotate() {
+  let newRotation = new Array();
+  let tetrominoCopy = currentTetromino;
+  let currentTetrominoBackUp;
+  for (let i = 0; i < tetrominoCopy.length; i++) {
+    currentTetrominoBackUp = [...currentTetromino];
+    let x = tetrominoCopy[i][0];
+    let y = tetrominoCopy[i][1];
+    let newX = GetLastSquareX() - y;
+    let newY = x;
+    newRotation.push([newX, newY]);
+  }
+  DeleteTetromino();
+  try {
+    currentTetromino = newRotation;
+    DrawTetromino();
+  } catch (e) {
+    if (e instanceof TypeError) {
+      currentTetromino = currentTetrominoBackUp;
+      DeleteTetromino();
+      DrawTetromino();
+    }
+  }
+}
+
+function GetLastSquareX() {
+  let lastX = 0;
+  for (let i = 0; i < currentTetromino.length; i++) {
+    let square = currentTetromino[i];
+    if (square[0] > lastX) lastX = square[0];
+  }
+  return lastX;
 }
